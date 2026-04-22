@@ -46,8 +46,11 @@ jobs:
         run: |
           GREEK_HOUR=$(TZ=Europe/Athens date +%H)
           TARGET=${{ steps.target.outputs.target }}
-          echo "Greek hour: $GREEK_HOUR, target: $TARGET"
-          if [ "$TARGET" = "tomorrow" ] && [ "$GREEK_HOUR" = "22" ]; then
+          echo "Greek hour: $GREEK_HOUR, target: $TARGET, event: ${{ github.event_name }}"
+          # Always proceed for manual runs
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "proceed=yes" >> $GITHUB_OUTPUT
+          elif [ "$TARGET" = "tomorrow" ] && [ "$GREEK_HOUR" = "22" ]; then
             echo "proceed=yes" >> $GITHUB_OUTPUT
           elif [ "$TARGET" = "today" ] && [ "$GREEK_HOUR" = "08" ]; then
             echo "proceed=yes" >> $GITHUB_OUTPUT
