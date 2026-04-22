@@ -1,0 +1,70 @@
+name: Office Alert
+
+on:
+  schedule:
+    # Summer time (EEST, UTC+3)
+    - cron: '0 19 * * *'   # 22:00 Greek → tomorrow's office alert
+    - cron: '0 5 * * *'    # 08:00 Greek → today's office alert
+    # Winter time (EET, UTC+2) — comment out in summer if duplicates are a problem
+    - cron: '0 20 * * *'   # 22:00 Greek (winter)
+    - cron: '0 6 * * *'    # 08:00 Greek (winter)
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'today or tomorrow'
+        default: 'today'
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: npm install axios
+
+      - name: Determine target based on schedule
+        id: target
+        run: |
+          HOUR_UTC=$(TZ=UTC date +%H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "target=${{ github.event.inputs.target }}" >> $GITHUB_OUTPUT
+          elif [ "$HOUR_UTC" -ge 18 ]; then
+            echo "target=tomorrow" >> $GITHUB_OUTPUT
+          else
+            echo "target=today" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate Greek time window
+        id: timecheck
+        env:
+          TZ: Europe/Athens
+        run: |
+          GREEK_HOUR=$(TZ=Europe/Athens date +%H)
+          TARGET=${{ steps.target.outputs.target }}
+          echo "Greek hour: $GREEK_HOUR, target: $TARGET"
+          if [ "$TARGET" = "tomorrow" ] && [ "$GREEK_HOUR" = "22" ]; then
+            echo "proceed=yes" >> $GITHUB_OUTPUT
+          elif [ "$TARGET" = "today" ] && [ "$GREEK_HOUR" = "08" ]; then
+            echo "proceed=yes" >> $GITHUB_OUTPUT
+          else
+            echo "Outside target window — skipping"
+            echo "proceed=no" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Write browser state
+        if: steps.timecheck.outputs.proceed == 'yes'
+        env:
+          BROWSER_STATE_JSON: ${{ secrets.BROWSER_STATE_JSON }}
+        run: echo "$BROWSER_STATE_JSON" > browser-state.json
+
+      - name: Run office alert
+        if: steps.timecheck.outputs.proceed == 'yes'
+        env:
+          TARGET: ${{ steps.target.outputs.target }}
+          NTFY_TOPIC: myplanner-pkontog
+        run: node cloud/office-alert.js
