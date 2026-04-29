@@ -1,0 +1,39 @@
+name: Weekly Pin
+
+on:
+  schedule:
+    - cron: '0 19 * * 0'   # Sunday 22:00 Greek (summer)
+    - cron: '0 20 * * 0'   # Sunday 22:00 Greek (winter)
+  workflow_dispatch:
+
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install axios
+
+      - name: Validate Greek time
+        id: timecheck
+        run: |
+          GREEK_HOUR=$(TZ=Europe/Athens date +%H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$GREEK_HOUR" = "22" ]; then
+            echo "proceed=yes" >> $GITHUB_OUTPUT
+          else
+            echo "proceed=no" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Write browser state
+        if: steps.timecheck.outputs.proceed == 'yes'
+        env:
+          BROWSER_STATE_JSON: ${{ secrets.BROWSER_STATE_JSON }}
+        run: echo "$BROWSER_STATE_JSON" > browser-state.json
+
+      - name: Send weekly pin
+        if: steps.timecheck.outputs.proceed == 'yes'
+        env:
+          NTFY_TOPIC: myplanner-pkontog
+        run: node cloud/weekly-pin.js
