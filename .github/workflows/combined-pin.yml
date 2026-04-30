@@ -1,9 +1,13 @@
-name: Weekly Pin
+name: Combined Pin
 
 on:
   schedule:
-    - cron: '0 19 * * 0'   # Sunday 22:00 Greek (summer)
-    - cron: '0 20 * * 0'   # Sunday 22:00 Greek (winter)
+    # Daily 8:00 Greek (current week, plus next on Thu/Fri)
+    - cron: '0 5 * * *'   # 08:00 EEST (summer)
+    - cron: '0 6 * * *'   # 08:00 EET (winter)
+    # Wed 12:30 Greek (after booking, current + next week)
+    - cron: '30 9 * * 3'  # 12:30 EEST
+    - cron: '30 10 * * 3' # 12:30 EET
   workflow_dispatch:
 
 jobs:
@@ -20,7 +24,12 @@ jobs:
         id: timecheck
         run: |
           GREEK_HOUR=$(TZ=Europe/Athens date +%H)
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$GREEK_HOUR" = "22" ]; then
+          GREEK_DOW=$(TZ=Europe/Athens date +%u)  # 1=Mon..7=Sun
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "proceed=yes" >> $GITHUB_OUTPUT
+          elif [ "$GREEK_HOUR" = "08" ]; then
+            echo "proceed=yes" >> $GITHUB_OUTPUT
+          elif [ "$GREEK_HOUR" = "12" ] && [ "$GREEK_DOW" = "3" ]; then
             echo "proceed=yes" >> $GITHUB_OUTPUT
           else
             echo "proceed=no" >> $GITHUB_OUTPUT
@@ -32,8 +41,8 @@ jobs:
           BROWSER_STATE_JSON: ${{ secrets.BROWSER_STATE_JSON }}
         run: echo "$BROWSER_STATE_JSON" > browser-state.json
 
-      - name: Send weekly pin
+      - name: Send combined pin
         if: steps.timecheck.outputs.proceed == 'yes'
         env:
           NTFY_TOPIC: myplanner-pkontog
-        run: node cloud/weekly-pin.js
+        run: node cloud/combined-pin.js
