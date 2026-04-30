@@ -114,8 +114,8 @@ async function main() {
   }
 
   const range = `${monday.getDate()}/${monday.getMonth() + 1}-${friday.getDate()}/${friday.getMonth() + 1}`;
-  const message = lines.join("\n");
-  await sendNtfy(`📅 Επόμενη βδομάδα ${range}`, message);
+  const message = `📅 Επόμενη βδομάδα ${range}\n\n${lines.join("\n")}`;
+  await sendNtfy(`Epomeni Evdomada ${range}`, message);
 }
 
 main().catch(e => { log(`Error: ${e.message}`); process.exit(1); });
