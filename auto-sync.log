@@ -20,3 +20,23 @@ To https://github.com/elphysics77-collab/myplanner-cloud.git
    e56cdd1..afc6086  main -> main
 [Mon 05/04/2026 14:32:13.89] Pushed local changes 
 Already up to date.
+[main 19ab3ec] auto-sync from PC Mon 05/04/2026 14:46:03.29
+ Committer: KONTOGEORGOS Panagiotis <pkontog@netcompany.com>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 21 insertions(+)
+To https://github.com/elphysics77-collab/myplanner-cloud.git
+   afc6086..19ab3ec  main -> main
+[Mon 05/04/2026 14:46:03.29] Pushed local changes 
+remote: Internal Server Error
+fatal: unable to access 'https://github.com/elphysics77-collab/myplanner-cloud.git/': The requested URL returned error: 500
