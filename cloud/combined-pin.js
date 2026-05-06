@@ -59,6 +59,16 @@ async function fetchWeek(client, monday, holidays) {
   if (r.status !== 200) throw new Error(`HTTP ${r.status}`);
   const entries = Array.isArray(r.data) ? r.data : [];
 
+  // Fetch all office details in parallel
+  const officeEntries = entries.filter(e => e.datesAndType?.type === "0036");
+  const detailsMap = {};
+  await Promise.all(officeEntries.map(async (e) => {
+    try {
+      const dr = await client.get(`/deskbooking/api/v1/deskbooking/${e.deskBookingId}`);
+      detailsMap[e.date] = dr.data;
+    } catch {}
+  }));
+
   const lines = [];
   for (let i = 0; i < 5; i++) {
     const d = new Date(monday); d.setDate(monday.getDate() + i);
@@ -69,13 +79,12 @@ async function fetchWeek(client, monday, holidays) {
     const type = entry?.datesAndType?.type;
 
     if (type === "0036") {
-      try {
-        const dr = await client.get(`/deskbooking/api/v1/deskbooking/${entry.deskBookingId}`);
-        const det = dr.data;
+      const det = detailsMap[ds];
+      if (det) {
         const sectorShort = det.facilitySectorName === "AMALIAS" ? "Αμ" : (det.facilitySectorName === "MAROUSSI" ? "Μα" : det.facilitySectorName);
         const floorShort = det.facilityFloor.trim().replace(" Floor", "").replace("Mezzazine", "Mez").replace("Ground", "G");
         lines.push(`${dayName} ${dayNum} ✅ ${sectorShort}/${floorShort}/${det.code}`);
-      } catch {
+      } else {
         lines.push(`${dayName} ${dayNum} ✅`);
       }
     } else if (type === "0035") {
@@ -117,14 +126,14 @@ async function main() {
 
   const holidays = { ...getGreekHolidays(currentMonday.getFullYear()), ...getGreekHolidays(currentMonday.getFullYear() + 1) };
 
-  const current = await fetchWeek(client, currentMonday, holidays);
-  let body = `📅 Τρέχουσα ${current.range}\n${current.lines.join("\n")}`;
+  // Fetch both weeks in parallel
+  const nextMonday = new Date(currentMonday); nextMonday.setDate(currentMonday.getDate() + 7);
+  const promises = [fetchWeek(client, currentMonday, holidays)];
+  if (showNextWeek) promises.push(fetchWeek(client, nextMonday, holidays));
+  const [current, next] = await Promise.all(promises);
 
-  if (showNextWeek) {
-    const nextMonday = new Date(currentMonday); nextMonday.setDate(currentMonday.getDate() + 7);
-    const next = await fetchWeek(client, nextMonday, holidays);
-    body += `\n\n📅 Επόμενη ${next.range}\n${next.lines.join("\n")}`;
-  }
+  let body = `📅 Τρέχουσα ${current.range}\n${current.lines.join("\n")}`;
+  if (next) body += `\n\n📅 Επόμενη ${next.range}\n${next.lines.join("\n")}`;
 
   await sendNtfy("MyPlanner Calendar", body);
 }

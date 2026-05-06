@@ -16,5 +16,4 @@ git commit -m "manual refresh" >nul 2>&1
 git push >nul 2>&1
 
 echo.
-echo Done! Check your phone (notification + updated calendar in ~30 sec).
-timeout /t 3 /nobreak >nul
+echo Done!
