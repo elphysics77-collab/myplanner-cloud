@@ -403,3 +403,29 @@ To https://github.com/elphysics77-collab/myplanner-cloud.git
    d33c71b..8515cc2  main -> main
 [Fri 05/22/2026  9:41:41.42] Pushed local changes 
 fatal: unable to access 'https://github.com/elphysics77-collab/myplanner-cloud.git/': Could not resolve host: github.com
+[main 0bb5807] auto-sync from PC Thu 05/28/2026 12:25:39.59
+ Committer: KONTOGEORGOS Panagiotis <pkontog@netcompany.com>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 19 insertions(+)
+fatal: unable to access 'https://github.com/elphysics77-collab/myplanner-cloud.git/': Could not resolve host: github.com
+[Thu 05/28/2026 12:25:39.59] Pushed local changes 
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+

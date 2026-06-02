@@ -7,7 +7,7 @@ const fs = require("fs");
 const https = require("https");
 
 const NTFY_TOPIC = process.env.NTFY_TOPIC || "myplanner-pkontog";
-const BASE_URL = "https://myplanner.netcompany-intrasoft.com";
+const BASE_URL = "https://deskbooking.netcompany.com";
 const DAYS_GR = ["Κυρ", "Δε", "Τρ", "Τε", "Πε", "Πα", "Σα"];
 
 function log(msg) { console.log(`[${new Date().toISOString()}] ${msg}`); }

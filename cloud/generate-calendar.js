@@ -7,7 +7,7 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-const BASE_URL = "https://myplanner.netcompany-intrasoft.com";
+const BASE_URL = "https://deskbooking.netcompany.com";
 const DAYS_GR = ["Κυρ", "Δευ", "Τρι", "Τετ", "Πεμ", "Παρ", "Σαβ"];
 const MONTHS_GR = ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"];
 const DOW_SHORT = ["Δε", "Τρ", "Τε", "Πε", "Πα", "Σα", "Κυ"];
