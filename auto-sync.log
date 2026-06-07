@@ -486,3 +486,22 @@ To https://github.com/elphysics77-collab/myplanner-cloud.git
    51ee148..eae241d  main -> main
 [Wed 06/03/2026 22:00:03.91] Pushed local changes 
 Already up to date.
+[main 6b2ea80] auto-sync from PC Thu 06/04/2026  8:00:03.41
+ Committer: KONTOGEORGOS Panagiotis <pkontog@netcompany.com>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 19 insertions(+)
+To https://github.com/elphysics77-collab/myplanner-cloud.git
+   eae241d..6b2ea80  main -> main
+[Thu 06/04/2026  8:00:03.41] Pushed local changes 
+Already up to date.
