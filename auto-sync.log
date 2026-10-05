@@ -3319,3 +3319,22 @@ To https://github.com/elphysics77-collab/myplanner-cloud.git
    83b2ece..a551cff  main -> main
 [Sat 10/03/2026 22:00:09.30] Pushed local changes 
 Already up to date.
+[main 18c0385] auto-sync from PC Sun 10/04/2026  8:00:08.93
+ Committer: KONTOGEORGOS Panagiotis <pkontog@netcompany.com>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 19 insertions(+)
+To https://github.com/elphysics77-collab/myplanner-cloud.git
+   a551cff..18c0385  main -> main
+[Sun 10/04/2026  8:00:08.93] Pushed local changes 
+fatal: unable to access 'https://github.com/elphysics77-collab/myplanner-cloud.git/': Could not resolve host: github.com
